@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>K-POP単語帳</title>
+    <!--ホームのベース-->
+    <style>
+        body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #f5f5f5; /* 背景は薄いグレー（お好みで変更可） */
+        }
+
+        h1 {
+        margin-bottom: 40px;
+        font-size: 2em;
+        text-align: center;
+        }
+
+        #menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px; /* ボタンの間隔 */
+        }
+
+        .song-btn {
+        width: 220px;
+        padding: 15px 0;
+        border: 1.5px solid black;
+        border-radius: 20px;
+        font-size: 1.1em;
+        background-color: white;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .song-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 単語画面は最初は非表示 */
+        #question-area {
+        display: none;
+        text-align: center;
+        }
+
+        #question-area button {
+        margin: 5px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid #aaa;
+        }
+    </style>
+
+    <link rel="manifest" href="manifest.json">
+    <script>
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+    }
+    </script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="K-POP単語帳">
+    <link rel="apple-touch-icon" href="icon.png">
+</head>
+
+<body>
+    <h1>K-POP単語帳 🎵</h1>
+    <!---->
+    <div id="menu">
+        <button class="song-btn" onclick="selectSong('eleven')">ELEVEN</button>
+        <button class="song-btn" onclick="selectSong('lovedive')">LOVE DIVE</button>
+        <button class="song-btn" onclick="selectSong('afterLike')">After Like</button>
+        <button class="song-btn" onclick="selectSong('heya')">HEYA</button>
+        <button class="song-btn" onclick="selectSong('attitude')">ATTITUDE</button>
+        <button class="song-btn" onclick="selectSong('xoxz')">XOXZ</button>
+    </div>
+
+    <div id="question-area">
+        <h2 id="songTitle"></h2>
+        <p id="word"></p>
+        <button onclick="showMeaning()">意味を見る</button>
+        <button onclick="nextWord()">次の単語</button>
+        <p id="meaning"></p>
+        <button onclick="backToMenu()">戻る</button>
+    </div>
+
+    <script>
+        const data = {
+        eleven: {
+            title: "ELEVEN（IVE）",
+            words: [
+            { korean: "사랑", japanese: "愛" },
+            { korean: "눈빛", japanese: "まなざし" },
+            { korean: "거울", japanese: "鏡" },
+            ]
+        },
+        lovedive: {
+            title: "LOVE DIVE（IVE）",
+            words: [
+            { korean: "진심", japanese: "本気・真心" },
+            { korean: "보여줘", japanese: "見せて" },
+            { korean: "사랑해", japanese: "愛してる" },
+            ]
+        },
+        afterLike: {
+            title: "After LIKE（IVE）",
+            words: [
+            { korean: "진심", japanese: "本気・真心" },
+            { korean: "보여줘", japanese: "見せて" },
+            { korean: "사랑해", japanese: "愛してる" },
+            ]
+        },
+        heya: {
+            title: "HEYA（IVE）",
+            words: [
+            { korean: "진심", japanese: "本気・真心" },
+            { korean: "보여줘", japanese: "見せて" },
+            { korean: "사랑해", japanese: "愛してる" },
+            ]
+        },
+        attitude: {
+            title: "ATTITUDE（IVE）",
+            words: [
+            { korean: "진심", japanese: "本気・真心" },
+            { korean: "보여줘", japanese: "見せて" },
+            { korean: "사랑해", japanese: "愛してる" },
+            ]
+        },
+        xoxz: {
+            title: "XOXZ（IVE）",
+            words: [
+            { korean: "진심", japanese: "本気・真心" },
+            { korean: "보여줘", japanese: "見せて" },
+            { korean: "사랑해", japanese: "愛してる" },
+            ]
+        }
+        };
+
+        let currentSong = null;
+        let index = 0;
+
+        function selectSong(songKey) {
+        currentSong = data[songKey];
+        index = 0;
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("question-area").style.display = "block";
+        document.getElementById("songTitle").textContent = currentSong.title;
+        showWord();
+        }
+
+        function showWord() {
+        const wordObj = currentSong.words[index];
+        document.getElementById("word").textContent = wordObj.korean;
+        document.getElementById("meaning").textContent = "";
+        }
+
+        function showMeaning() {
+        document.getElementById("meaning").textContent =
+            currentSong.words[index].japanese;
+        }
+
+        function nextWord() {
+        index = (index + 1) % currentSong.words.length;
+        showWord();
+        }
+
+        function backToMenu() {
+        document.getElementById("menu").style.display = "";
+        document.getElementById("question-area").style.display = "none";
+        }
+    </script>
+</body>
+</html>
