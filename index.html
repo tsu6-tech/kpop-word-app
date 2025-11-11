@@ -97,7 +97,7 @@
 
 <body>
     <h1>K-POP単語帳 🎵</h1>
-    <!---->
+    <!--メニュー画面-->
     <div id="menu">
         <button class="song-btn" onclick="selectSong('eleven')">ELEVEN</button>
         <button class="song-btn" onclick="selectSong('lovedive')">LOVE DIVE</button>
@@ -105,6 +105,16 @@
         <button class="song-btn" onclick="selectSong('heya')">HEYA</button>
         <button class="song-btn" onclick="selectSong('attitude')">ATTITUDE</button>
         <button class="song-btn" onclick="selectSong('xoxz')">XOXZ</button>
+    </div>
+
+    <!--クイズ画面-->
+    <div id="question-area">
+        <h2 id="songTitle"></h2>
+        <p id="word" style="font-size:2em;"></p>
+        <div id="options"></div>
+        <p id="feedback"></p>
+        <button onclick="nextWord()">次の問題</button>
+        <button onclick="backToMenu()">戻る</button>
     </div>
 
     <script>
@@ -256,7 +266,6 @@
         function showWord() {
             const wordObj = currentSong.words[index];
             document.getElementById("word").textContent = wordObj.korean;
-            document.getElementById("meaning").textContent = "";
 
             //ランダムに３つの誤答を選択
             let options = [wordObj.japanese];
@@ -267,6 +276,8 @@
 
             //シャッフル
             options.sort(() => Math.random() - 0.5);
+
+            //表示
             const container = document.getElementById("options");
             container.innerHTML = "";
             options.forEach(opt => {
@@ -278,6 +289,8 @@
             });
         }
     
+
+
         //正誤チェック
         function checkAnswer(selected, correct) {
             const feedback = document.getElementById("feedback");
