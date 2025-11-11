@@ -18,10 +18,11 @@
         align-items: center;
         background: #f5f5f5; /* 背景は薄いグレー（お好みで変更可） */
         }
-
+        
+        /*タイトルサイズ*/
         h1 {
         margin-bottom: 40px;
-        font-size: 6vm;
+        font-size: 6vw;
         text-align: center;
         }
 
@@ -31,11 +32,12 @@
         align-items: center;
         gap: 15px; /* ボタンの間隔 */
         }
-
+        
+        /*ボタンサイズ*/
         .song-btn {
-        width: 80vw;
-        max-width:300px;
-        padding: 4vw 0;
+        width: 80vw;/*画面幅の80%*/
+        max-width: 300px;
+        padding: 4vw 0;/*縦の余白4%*/
         border: 1.5px solid black;
         border-radius: 20px;
         font-size: 1.1em;
@@ -44,7 +46,7 @@
         transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .song-btn:hover {
+        .song-btn:active {
         transform: scale(1.05);
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
         }
@@ -60,6 +62,24 @@
         padding: 10px 20px;
         border-radius: 10px;
         border: 1px solid #aaa;
+        }
+
+        .option-btn {
+            display: block;
+            width: 80vw;
+            max-width: 300px;
+            margin: 8px auto;
+            padding: 10px;
+            border: 1px solid #aaa;
+            border-radius: 10px;
+            background: white;
+            cursor:pointer;
+            transition: 0.2s;
+        }
+
+        #feedback {
+            font-weight: bold;
+            margin-top: 15px;
         }
     </style>
 
@@ -85,15 +105,6 @@
         <button class="song-btn" onclick="selectSong('heya')">HEYA</button>
         <button class="song-btn" onclick="selectSong('attitude')">ATTITUDE</button>
         <button class="song-btn" onclick="selectSong('xoxz')">XOXZ</button>
-    </div>
-
-    <div id="question-area">
-        <h2 id="songTitle"></h2>
-        <p id="word"></p>
-        <button onclick="showMeaning()">意味を見る</button>
-        <button onclick="nextWord()">次の単語</button>
-        <p id="meaning"></p>
-        <button onclick="backToMenu()">戻る</button>
     </div>
 
     <script>
@@ -241,15 +252,42 @@
         showWord();
         }
 
+        //問題を表示
         function showWord() {
-        const wordObj = currentSong.words[index];
-        document.getElementById("word").textContent = wordObj.korean;
-        document.getElementById("meaning").textContent = "";
-        }
+            const wordObj = currentSong.words[index];
+            document.getElementById("word").textContent = wordObj.korean;
+            document.getElementById("meaning").textContent = "";
 
-        function showMeaning() {
-        document.getElementById("meaning").textContent =
-            currentSong.words[index].japanese;
+            //ランダムに３つの誤答を選択
+            let options = [wordObj.japanese];
+            while (options.length < 4){
+                const rand = currentSong.words[Math.floor(Math.random() * currentSong.words.length)].japanese;
+                if (!options.includes(rand)) options.push(rand);
+            }
+
+            //シャッフル
+            options.sort(() => Math.random() - 0.5);
+            const container = document.getElementById("options");
+            container.innerHTML = "";
+            options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.textContent = opt;
+                btn.className = "option-btn";
+                btn.onclick = () => checkAnswer(opt, wordObj.japanese);
+                container.appendChild(btn);
+            });
+        }
+    
+        //正誤チェック
+        function checkAnswer(selected, correct) {
+            const feedback = document.getElementById("feedback");
+            if (selected === correct) {
+                feedback.textContent = "⭕ 正解！";
+                feedback.style.color = "green";
+            } else {
+                feedback.textContent = `❌ 不正解… 正解は「${correct}」`;
+                feedback.style.color = "red";
+            }
         }
 
         function nextWord() {
@@ -264,6 +302,3 @@
     </script>
 </body>
 </html>
-
-
-
