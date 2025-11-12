@@ -116,8 +116,9 @@
         <p id="word" style="font-size:2em;"></p>
         <div id="options"></div>
         <p id="feedback"></p>
-        <button onclick="nextWord()">次の問題</button>
-        <button onclick="backToMenu()">戻る</button>
+        <button onclick="backword()">戻る</button>
+        <button onclick="nextWord()">次の問題</button><br>
+        <button onclick="backToMenu()",center>メニュー</button>
     </div>
 
     <script>
@@ -850,6 +851,13 @@
             showWord();
         }
 
+        //戻るボタン
+        function backword() {
+            index = (index -1 + currentSong.words.length) % currentSong.words.length;
+            document.getElementById("feedback").textContent ="";
+            showWord();
+        }
+        
         //メニューに戻る
         function backToMenu() {
             document.getElementById("menu").style.display = "";
@@ -858,6 +866,7 @@
     </script>
 </body>
 </html>
+
 
 
 
